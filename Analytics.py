@@ -13,6 +13,18 @@ class PlayerStats:
     moves: int
 
 
+@dataclass()
+class PlayerStatsTotal:
+    wins: int = 0
+    time_total: int = 0
+    moves_total: int = 0
+
+    def increment(self, ps: PlayerStats):
+        self.wins += ps.win
+        self.time_total += ps.time
+        self.moves_total += ps.moves
+
+
 def get_player_stats_from_line(line):
     win = True if line[0] == "True" else False
     time = int(line[1])
@@ -87,22 +99,29 @@ def main():
     if n == 0:
         print(f"Running {n} experiments")
 
-    p1wins = p2wins = 0
+    p1total = PlayerStatsTotal()
+    p2total = PlayerStatsTotal()
     for i in tqdm(range(n), desc="Running experiments"):
         gs = run_experiment(arguments, agents)
-        if gs.outcome == "Win":
-            if gs.p1stats.win:
-                p1wins += 1
-            else:
-                p2wins += 1
+        p1total.increment(gs.p1stats)
+        p2total.increment(gs.p2stats)
 
-    print(f"Player 1 wins: {p1wins}")
-    print(f"Player 2 wins: {p2wins}")
+    print(f"Player 1")
+    print(f"    wins: {p1total.wins}")
+    print(f"    total time: {p1total.time_total}")
+    print(f"    total moves: {p1total.moves_total}")
 
-    if p2wins == 0:
+    print(f"Player 2")
+    print(f"    wins: {p2total.wins}")
+    print(f"    total time: {p2total.time_total}")
+    print(f"    total moves: {p2total.moves_total}")
+
+    if p2total.wins == 0:
         p1win_rate = 100
     else:
-        p1win_rate = (p1wins / (p1wins + p2wins)) * 100
+        p1win_rate = (p1total.wins / (p1total.wins + p2total.wins)) * 100
+
+    print()
     print(f"Player 1 win rate: {p1win_rate:.2f}%")
 
 
