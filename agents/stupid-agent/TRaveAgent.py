@@ -54,7 +54,7 @@ class Agent():
                 self.state = GameState(int(s[1]), s[2])
                 self.board = [[0] * self.board_size for i in range(self.board_size)]
                 # self.agent = UctMctsAgent(self.state)
-                self.agent = UctMctsAgent(self.state)
+                self.agent = RaveMctsAgent(self.state)
                 self.colour = s[2]
                 if self.colour == "R":
                     self.make_move()
@@ -98,13 +98,13 @@ class Agent():
                 return
         
         self.agent.set_gamestate(self.state)
-        self.agent.search(1)
+        self.agent.search(.2)
         move = self.agent.best_move()
-        self.state.play(move)
-        self.agent.move(move)
-       
-        
-        self.s.sendall(bytes(f"{move[0]},{move[1]}\n", "utf-8"))
+        print("TRAVE BEST_MOVE: ", move)
+        if (move != -1):
+            self.state.play(move)
+            self.agent.move(move)
+            self.s.sendall(bytes(f"{move[0]},{move[1]}\n", "utf-8"))
         
         # 2. run monte carlo algo
         # 3. once move made, update tree structure for our move

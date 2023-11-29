@@ -64,6 +64,7 @@ class GameState:
         Args:
             cell (tuple): row and column of the cell
         """
+        print(cell)
         x, y = cell
         if self.board[x][y] == GameMeta.PLAYERS['none']:
             self.board[x][y] = GameMeta.PLAYERS['red']
@@ -90,6 +91,7 @@ class GameState:
         Args:
             cell (tuple): row and column of the cell
         """
+        print(cell)
         x, y = cell
         if self.board[x][y] == GameMeta.PLAYERS['none']:
             self.board[x][y] = GameMeta.PLAYERS['blue']

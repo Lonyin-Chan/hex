@@ -222,7 +222,12 @@ class UctMctsAgent:
         # choose the move of the most simulated node breaking ties randomly
         max_value = max(self.root.children.values(), key=lambda n: n.N).N
         max_nodes = [n for n in self.root.children.values() if n.N == max_value]
+        print([n.move for n in self.root.children.values()])
+        print([n.move for n in max_nodes])
         bestchild = choice(max_nodes)
+        print("Running best move")
+        print(bestchild)
+        print(bestchild.move)
         return bestchild.move
 
     def move(self, move: tuple) -> None:
