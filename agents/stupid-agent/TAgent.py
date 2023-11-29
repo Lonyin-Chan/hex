@@ -87,18 +87,20 @@ class Agent():
         # 
     
     def make_move(self):
-        if self.colour == "B" and self.turn_count == 0 and choice([0, 1]) == 1:
+        if self.turn_count == 0 and self.colour == "B" and choice([0, 1]) == 1:
             # decide whether to swap or not
             # ones on edges may be less desirable compared to those in middle
                 self.s.sendall(bytes("SWAP\n", "utf-8"))
                 self.colour = "R"
                 self.turn_count += 1
                 return
-
+        
+        self.agent.set_gamestate(self.state)
         self.agent.search(1)
         move = self.agent.best_move()
         self.state.play(move)
         self.agent.move(move)
+       
         
         self.s.sendall(bytes(f"{move[0]},{move[1]}\n", "utf-8"))
         

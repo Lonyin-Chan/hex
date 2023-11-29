@@ -133,7 +133,7 @@ class UctMctsAgent:
         # if we reach a leaf node generate its children and return one of them
         # if the node is terminal, just return the terminal node
 
-        if self.expand(node, state):
+        if self.expand(node, state) and node.children:
             node = choice(list(node.children.values()))
             state.play(node.move)
         return node, state
@@ -175,9 +175,10 @@ class UctMctsAgent:
 
         """
         moves = state.moves()  # Get a list of all possible moves in current state of the game
-
+        # print(f"POSSIBLE MOVES: {moves}")
         while state.winner == GameMeta.PLAYERS['none'] and moves:
             move = choice(moves)
+            
             state.play(move)
             # print(state.board)
             moves.remove(move)

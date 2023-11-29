@@ -49,6 +49,7 @@ class GameState:
         """
         # self.board[cell[0]][cell[1]] = self.colour
         # self.colour = self.opp_colour()
+        # print("PLAY: ", cell)
         if self.to_play == GameMeta.PLAYERS['red']:
             self.place_red(cell)
             self.to_play = GameMeta.PLAYERS['blue']
@@ -131,13 +132,13 @@ class GameState:
         """
         Get a list of all moves possible on the current board.
         """
-        print("board: ", self)
+        # print("board: ", self)
         moves = []
         for y in range(self.board_size):
             for x in range(self.board_size):
                 if self.board[x][y] == GameMeta.PLAYERS['none']:
                     moves.append((x, y))
-        print(f"POSSIBLE MOVES: {moves}")
+        # print(f"POSSIBLE MOVES: {moves}")
         return moves
     
     def turn(self) -> int:
