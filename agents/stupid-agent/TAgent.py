@@ -14,15 +14,18 @@ class Agent():
     HOST = "127.0.0.1"
     PORT = 1234
 
-    def __init__(self, board_size=11):
+    def __init__(self, board_size=0, colour="NA"):
         self.s = socket.socket(
             socket.AF_INET, socket.SOCK_STREAM
         )
 
         self.s.connect((self.HOST, self.PORT))
-
+        
         self.state = None
         self.agent = None
+        self.board_size = board_size
+        self.colour = "NA"
+        self.turn_count = 0
 
     def run(self):
         """Reads data until it receives an END message or the socket closes."""
@@ -46,10 +49,12 @@ class Agent():
         messages = [x.split(";") for x in messages]
         # print(messages)
         for s in messages:
+            print(s, self.colour)
             if s[0] == "START":
                 self.state = GameState(int(s[1]), s[2])
                 self.board = [[0] * self.board_size for i in range(self.board_size)]
                 self.agent = UctMctsAgent(self.state)
+                self.colour = s[2]
                 if self.colour == "R":
                     self.make_move()
 
@@ -61,8 +66,11 @@ class Agent():
                     return True
                 elif s[1] == "SWAP":
                     self.swapColour()
-                elif s[3] == self.colour:
-                    self.processOpposingAgentMove()
+                elif s[3] == self.colour: # Our agents move
+                    print()
+                    x, y = [int(x) for x in s[1].split(",")]
+                    self.processOpposingAgentMove(x, y)
+                # if updateing opposing agents move on our end
 
         return False
     
@@ -75,8 +83,8 @@ class Agent():
         self.state.board[x][y] = self.state.opp_colour()
         # TODO: update tree
         # self.make_move()
-        self.state.play((x, y))
-        self.agent.move((x, y))
+        self.make_move()
+        # 
     
     def make_move(self):
         if self.colour == "B" and self.turn_count == 0 and choice([0, 1]) == 1:
@@ -85,7 +93,7 @@ class Agent():
                 self.s.sendall(bytes("SWAP\n", "utf-8"))
                 return
 
-        self.agent.search()
+        self.agent.search(5)
         move = self.agent.best_move()
         self.state.play(move)
         self.agent.move(move)

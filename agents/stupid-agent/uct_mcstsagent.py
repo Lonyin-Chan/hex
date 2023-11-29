@@ -5,8 +5,6 @@ from random import choice
 from time import time as clock
 from meta import GameMeta, MCTSMeta
 from TGameState import GameState
-from Agent import Agent
-
 
 class Node:
     """
