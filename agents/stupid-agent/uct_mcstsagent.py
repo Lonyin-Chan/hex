@@ -96,10 +96,10 @@ class UctMctsAgent:
 
         # do until we exceed our time budget
         while clock() - start_time < time_budget:
-            node, state = self.select_node()
-            turn = state.turn()
-            outcome = self.roll_out(state)
-            self.backup(node, turn, outcome)
+            node, state = self.select_node() #selection
+            turn = state.turn() #
+            outcome = self.roll_out(state) # simulation
+            self.backup(node, turn, outcome) # backprogation
             num_rollouts += 1
         run_time = clock() - start_time
         node_count = self.tree_size()
@@ -115,7 +115,7 @@ class UctMctsAgent:
         node = self.root
         state = deepcopy(self.root_state)
 
-        # stop if we find reach a leaf node
+        # stop if we find reach a leaf nodet
         while len(node.children) != 0:
             # descend to the maximum value node, break ties at random
             children = node.children.values()
@@ -132,6 +132,7 @@ class UctMctsAgent:
 
         # if we reach a leaf node generate its children and return one of them
         # if the node is terminal, just return the terminal node
+
         if self.expand(node, state):
             node = choice(list(node.children.values()))
             state.play(node.move)
@@ -151,6 +152,8 @@ class UctMctsAgent:
         if state.winner != GameMeta.PLAYERS['none']:
             # game is over at this node so nothing to expand
             return False
+        
+        # print("moves: ", state.moves())
 
         for move in state.moves():
             children.append(Node(move, parent))
@@ -173,9 +176,10 @@ class UctMctsAgent:
         """
         moves = state.moves()  # Get a list of all possible moves in current state of the game
 
-        while state.winner == GameMeta.PLAYERS['none']:
+        while state.winner == GameMeta.PLAYERS['none'] and moves:
             move = choice(moves)
             state.play(move)
+            # print(state.board)
             moves.remove(move)
 
         return state.winner

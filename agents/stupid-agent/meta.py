@@ -9,7 +9,7 @@ class MCTSMeta:
 
 
 class GameMeta:
-    PLAYERS = {'none': 0, 'white': 1, 'black': 2}
+    PLAYERS = {'none': 0, 'red': 1, 'blue': 2}
     INF = float('inf')
     GAME_OVER = -1
     EDGE1 = 1

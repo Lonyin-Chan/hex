@@ -49,6 +49,7 @@ class Agent():
         messages = [x.split(";") for x in messages]
         # print(messages)
         for s in messages:
+            print(s, self.colour)
             if s[0] == "START":
                 self.state = GameState(int(s[1]), s[2])
                 self.board = [[0] * self.board_size for i in range(self.board_size)]
@@ -64,8 +65,9 @@ class Agent():
                 if s[3] == "END":
                     return True
                 elif s[1] == "SWAP":
-                    self.swapColour(s[3])
+                    self.swapColour(s[3]s[3])
                 elif s[3] == self.colour: # Our agents move
+                    print()
                     x, y = [int(x) for x in s[1].split(",")]
                     self.processOpposingAgentMove(x, y)
                 # if updateing opposing agents move on our end
@@ -81,8 +83,6 @@ class Agent():
         self.state.board[x][y] = self.state.opp_colour()
         # TODO: update tree
         # self.make_move()
-        print("processOpposingAgentMove: ", self.state.board)
-        print("processOpposingAgentMove: ", self.state.colour)
         self.make_move()
         # 
     
@@ -91,11 +91,9 @@ class Agent():
             # decide whether to swap or not
             # ones on edges may be less desirable compared to those in middle
                 self.s.sendall(bytes("SWAP\n", "utf-8"))
-                self.colour = "R"
-                self.turn_count += 1
                 return
 
-        self.agent.search(1)
+        self.agent.search(5)
         move = self.agent.best_move()
         self.state.play(move)
         self.agent.move(move)
